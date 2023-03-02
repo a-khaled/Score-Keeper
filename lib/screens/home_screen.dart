@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:score_keeper/screens/new_game_screen.dart';
-import '../shared/player.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

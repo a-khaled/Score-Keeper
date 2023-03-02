@@ -12,7 +12,7 @@ class NewGameScreen extends StatefulWidget {
 }
 
 class _NewGameScreenState extends State<NewGameScreen> {
-  List<Player> playersList = [];
+  final List<Player> playersList = [];
   String newPLayerName = "";
   final _formKey = GlobalKey<FormState>();
 
@@ -39,6 +39,7 @@ class _NewGameScreenState extends State<NewGameScreen> {
                         content: Form(
                           key: _formKey,
                           child: TextFormField(
+                            maxLength: 18,
                             onChanged: (val) {
                               setState(() {
                                 newPLayerName = val;
@@ -146,10 +147,12 @@ class _NewGameScreenState extends State<NewGameScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const GameStartScreen()));
+                                builder: (context) => GameStartScreen(
+                                      playersList: playersList,
+                                    )));
                       },
                       child: Container(
                         padding: const EdgeInsets.all(15),
