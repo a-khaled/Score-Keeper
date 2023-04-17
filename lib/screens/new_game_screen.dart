@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:score_keeper/screens/game_start_screen.dart';
 import 'package:score_keeper/shared/db.dart';
+import 'package:score_keeper/widgets/add_player_dialog.dart';
 import '../shared/game.dart';
 import '../shared/player.dart';
 import '../widgets/new_player_widget.dart';
@@ -16,9 +17,9 @@ class _NewGameScreenState extends State<NewGameScreen> {
   final List<Player> playersList = [];
   String gameName = "";
   String newPLayerName = "";
-  final _formKey = GlobalKey<FormState>();
   int? gameId;
   bool _isLoading = false;
+  String result = "";
 
   Future createGame(Game game) async {
     setState(() {
@@ -30,6 +31,10 @@ class _NewGameScreenState extends State<NewGameScreen> {
         _isLoading = false;
       });
     });
+  }
+
+  doSomething() {
+    return;
   }
 
   @override
@@ -74,77 +79,17 @@ class _NewGameScreenState extends State<NewGameScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      setState(() {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text("Enter Player Name"),
-                                content: Form(
-                                  key: _formKey,
-                                  child: TextFormField(
-                                    maxLength: 18,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        newPLayerName = val;
-                                      });
-                                    },
-                                    validator: (val) {
-                                      if (val == null || val.isEmpty) {
-                                        return "player name can't be empty";
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                      prefixIcon: const Icon(Icons.person),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      errorBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              color: Colors.red),
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                    ),
-                                  ),
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.red),
-                                    child: const Text("Cancel"),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        setState(() {
-                                          Player newPlayer = Player(
-                                              name: newPLayerName, score: 0);
-                                          playersList.add(newPlayer);
-                                        });
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            Theme.of(context).primaryColor),
-                                    child: const Text("Add"),
-                                  ),
-                                ],
-                              );
-                            });
+                      AddPlayerDialog.dialog(context, () {
+                        setState(() {
+                          result = AddPlayerDialog.newPLayerName;
+                        });
+                        if (result.isNotEmpty) {
+                          Player player = Player(name: result, score: 0);
+                          setState(() {
+                            playersList.add(player);
+                            result = "";
+                          });
+                        }
                       });
                     },
                     child: Container(

@@ -65,6 +65,15 @@ CREATE TABLE $playersTable (
     }
   }
 
+  Future<void> addPlayer(Player player, int currentGameId) async {
+    final db = await instance.database;
+    await db.insert(playersTable, <String, Object?>{
+      playerName: player.name,
+      score: player.score,
+      gameId: currentGameId,
+    });
+  }
+
   Future<List<Game>> getAllGames() async {
     final db = await instance.database;
     final List<Map> maps = await db.query(gamesTable);
